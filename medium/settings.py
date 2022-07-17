@@ -40,12 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'authent',
+    'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
   
-    
 ]
+
+
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -156,6 +163,16 @@ VERSATILEIMAGEFIELD_RENDITION_KEY_SETS = {
 
 CORS_ALLOWED_ORIGINS = [
     "https://www.test-cors.org",
+    "http://localhost:3000",
+    "http://localhost:4200",
+    "https://web.postman.co",
+]
+
+CORS_ALLOW_METHODS = [
+"GET",
+"PUT",
+"DELETE",
+"POST",
 ]
 
 
@@ -170,4 +187,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False
 }
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
