@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Category, Book, Product, Cart
+from .models import Category,SubCategory, Product, Cart
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -157,27 +157,34 @@ class CategorySerializer(serializers.ModelSerializer):
             'title'
         )
         model = Category 
-
-
-class BookSerializer(serializers.ModelSerializer):
-    created_by = serializers.ReadOnlyField(source='created_by.username', read_only=False)
+        
+class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        fields = (
-            'id',
-            'title',
-            'category',
-            'author',
-            'isbn',
-            'pages',
-            'price',
-            'stock',
-            'description',
-            'imageUrl',
-            'created_by',
-            'status',
-            'date_created'
-        )
-        model = Book
+        fields = ("id","model","category")
+        
+        model = SubCategory
+        
+
+# class BookSerializer(serializers.ModelSerializer):
+#     created_by = serializers.ReadOnlyField(source='created_by.username', read_only=False)
+#     class Meta:
+#         fields = (
+#             'id',
+#             'title',
+#             'category',
+#             'sub_category',
+#             'author',
+#             'isbn',
+#             'pages',
+#             'price',
+#             'stock',
+#             'description',
+#             'imageUrl',
+#             'created_by',
+#             'status',
+#             'date_created'
+#         )
+#         model = Book
 
 class ProductSerializer(serializers.ModelSerializer):
     created_by = serializers.ReadOnlyField(source='created_by.username', read_only=False)
@@ -187,6 +194,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'product_tag',
             'name',
             'category',
+            'sub_category',
             'price',
             'stock',
             'imageUrl',
@@ -198,7 +206,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    books = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
+    
     products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
 
     class Meta:
@@ -207,23 +215,22 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            'books',
+            
             'products',
         )
 
 class CartUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('id','username', 'email')
 
 
 class CartSerializer(serializers.ModelSerializer):
 
     cart_id = CartUserSerializer(read_only=True, many=False)
-    books = BookSerializer(read_only=True, many=True)
+    # books = BookSerializer(read_only=True, many=True)
     products = ProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Cart
-        fields = ('cart_id', 'created_at', 'books', 'products')
+        fields = ('cart_id', 'created_at', 'products')

@@ -1,4 +1,3 @@
-from .serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics
 from django.contrib.auth.models import User
@@ -11,9 +10,11 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 # from django.contrib.auth.decorators import login_required
 
-from .models import Category, Book, Product, Cart
-from .serializers import (RegistrationSerializer, CategorySerializer, 
-                          BookSerializer, ProductSerializer, UserSerializer, 
+
+from .models import Category, Product, Cart ,SubCategory
+from .serializers import (RegisterSerializer,RegistrationSerializer,ChangePasswordSerializer, UpdateUserSerializer,
+                          SubCategorySerializer, CategorySerializer, 
+                          ProductSerializer, UserSerializer, 
                           CartSerializer)
 
 import uuid
@@ -131,8 +132,6 @@ class RegistrationAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data = request.data)
-        # serializer.is_valid(raise_exception = True)
-        # serializer.save()
         if(serializer.is_valid()):
             serializer.save()
             return Response({
@@ -153,16 +152,26 @@ class DetailCategory(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = (permissions.IsAuthenticated,)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
-class ListBook(generics.ListCreateAPIView):
+    
+class ListSubCategory(generics.ListCreateAPIView):
     # permission_classes = (permissions.IsAuthenticated,)
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-
-class DetailBook(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SubCategory.objects.all()
+    serializer_class = SubCategorySerializer
+    
+class DetailSubCategory(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = (permissions.IsAuthenticated,)
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    queryset = SubCategory.objects.all()
+    serializer_class = SubCategorySerializer
+
+# class ListBook(generics.ListCreateAPIView):
+#     # permission_classes = (permissions.IsAuthenticated,)
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
+
+# class DetailBook(generics.RetrieveUpdateDestroyAPIView):
+#     # permission_classes = (permissions.IsAuthenticated,)
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
 
 
 class ListProduct(generics.ListCreateAPIView):    

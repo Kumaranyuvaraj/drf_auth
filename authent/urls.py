@@ -3,7 +3,9 @@ from authent.views import RegisterView, ChangePasswordView, UpdateProfileView, L
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from . import views
 
-from .views import ListCategory, DetailCategory, ListBook, DetailBook, ListProduct, DetailProduct, ListUser, DetailUser, ListCart, DetailCart
+from .views import (ListCategory, DetailCategory,ListSubCategory,DetailSubCategory, 
+                    ListProduct, DetailProduct, ListUser, 
+                    DetailUser, ListCart, DetailCart)
 
 
 
@@ -23,8 +25,11 @@ urlpatterns = [
     path('categories/', ListCategory.as_view(), name='categorie'),
     path('categories/<int:pk>/', DetailCategory.as_view(), name='singlecategory'),
     
-    path('books/', ListBook.as_view(), name='books'),
-    path('books/<int:pk>/', DetailBook.as_view(), name='singlebook'),
+    path('sub_categories/', ListSubCategory.as_view(), name='sub_categorie'),
+    path('sub_categories/<int:pk>/', DetailSubCategory.as_view(), name='singlesub_category'),
+    
+    # path('books/', ListBook.as_view(), name='books'),
+    # path('books/<int:pk>/', DetailBook.as_view(), name='singlebook'),
 
     path('products/', ListProduct.as_view(), name='products'),
     path('products/<int:pk>/', DetailProduct.as_view(), name='singleproduct'),
@@ -34,7 +39,6 @@ urlpatterns = [
 
     path('carts/', ListCart.as_view(), name='allcarts'),
     path('carts/<int:pk>', DetailCart.as_view(), name='cartdetail'),
-    
     
 ]
 
