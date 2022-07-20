@@ -1,6 +1,6 @@
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -10,12 +10,16 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 # from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
-from .models import Category, Product, Cart ,SubCategory
-from .serializers import (RegisterSerializer,RegistrationSerializer,ChangePasswordSerializer, UpdateUserSerializer,
-                          SubCategorySerializer, CategorySerializer, 
-                          ProductSerializer, UserSerializer, 
-                          CartSerializer)
+
+
+
+from users.models import Category, Product, Cart ,SubCategory
+from users.serializers import (RegisterSerializer,ChangePasswordSerializer, UpdateUserSerializer,
+                          SubCategorySerializer, CategorySerializer, ProductSerializer, 
+                          UserSerializer, CartSerializer)
 
 import uuid
 
@@ -51,9 +55,6 @@ class GetListView(APIView):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 class ChangePasswordView(generics.UpdateAPIView):
 
@@ -125,23 +126,6 @@ class LogoutAllView(APIView):
 #############################################################################
 
 # Views for serializers and models:
-
-class RegistrationAPIView(generics.GenericAPIView):
-    
-    serializer_class = RegistrationSerializer
-
-    def post(self, request):
-        serializer = self.get_serializer(data = request.data)
-        if(serializer.is_valid()):
-            serializer.save()
-            return Response({
-                "RequestId": str(uuid.uuid4()),
-                "Message": "User created successfully",
-                
-                "User": serializer.data}, status=status.HTTP_201_CREATED
-                )
-        
-        return Response({"Errors": serializers.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class ListCategory(generics.ListCreateAPIView):
     # permission_classes = (permissions.IsAuthenticated,)

@@ -1,9 +1,13 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Category,SubCategory, Product, Cart
+from users.models import Category,SubCategory, Product, Cart
+from django.conf import settings
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -122,33 +126,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 # Model Serializers
 
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    
-    email = serializers.EmailField(max_length=50, min_length=6)
-    username = serializers.CharField(max_length=50, min_length=6)
-    password = serializers.CharField(max_length=150, write_only=True)
-
-    class Meta:
-        model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'password')
-
-    def validate(self, args):
-        email = args.get('email', None)
-        username = args.get('username', None)
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({'email': ('email already exists')})
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError({'username': ('username already exists')})
-
-        return super().validate(args)
-  
-
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-    
-
-
 class CategorySerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -164,28 +141,6 @@ class SubCategorySerializer(serializers.ModelSerializer):
         
         model = SubCategory
         
-
-# class BookSerializer(serializers.ModelSerializer):
-#     created_by = serializers.ReadOnlyField(source='created_by.username', read_only=False)
-#     class Meta:
-#         fields = (
-#             'id',
-#             'title',
-#             'category',
-#             'sub_category',
-#             'author',
-#             'isbn',
-#             'pages',
-#             'price',
-#             'stock',
-#             'description',
-#             'imageUrl',
-#             'created_by',
-#             'status',
-#             'date_created'
-#         )
-#         model = Book
-
 class ProductSerializer(serializers.ModelSerializer):
     created_by = serializers.ReadOnlyField(source='created_by.username', read_only=False)
     class Meta:
@@ -228,7 +183,7 @@ class CartUserSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
 
     cart_id = CartUserSerializer(read_only=True, many=False)
-    # books = BookSerializer(read_only=True, many=True)
+    
     products = ProductSerializer(read_only=True, many=True)
 
     class Meta:

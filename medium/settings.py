@@ -40,19 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authent',
+    
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
-  
+    'users',
 ]
-
-
-
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -190,5 +184,7 @@ SIMPLE_JWT = {
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
+AUTH_USER_MODEL = 'users.User'
 
+SILENCED_SYSTEM_CHECKS = ['auth.E003', 'auth.W004']
 

@@ -1,7 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
+from .managers import CustomUserManager
+from django.conf import settings
+
+from django.contrib.auth import get_user_model
+User = get_user_model
+
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
@@ -12,38 +19,15 @@ class Category(models.Model):
         return self.title
     
 class SubCategory(models.Model):
-    model = models.CharField(max_length=100)
+    productType = models.CharField(max_length=100)
     category = models.ForeignKey(Category,related_name='sub_category', on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = 'SubCategories'
     def __str__(self):
-        return self.model
+        return self.productType
     
     
-
-# class Book(models.Model):
-#     title = models.CharField(max_length=150)
-#     category = models.ForeignKey(Category, related_name='books', on_delete=models.CASCADE)
-#     sub_category = models.ForeignKey(SubCategory,related_name='books',on_delete=models.CASCADE)
-#     author = models.CharField(max_length=100, default='John Doe')
-#     isbn = models.CharField(max_length=13)
-#     pages = models.IntegerField()
-#     price = models.IntegerField()
-#     stock = models.IntegerField()
-#     description = models.TextField()
-#     imageUrl = models.URLField()
-#     created_by = models.ForeignKey('auth.User', related_name='books', on_delete=models.CASCADE)
-#     status = models.BooleanField(default=True)
-#     date_created = models.DateField(auto_now_add=True)
-
-#     class Meta:
-#         ordering = ['-date_created']
-
-#     def __str__(self):
-#         return self.title
-
-
 class Product(models.Model):
     product_tag = models.CharField(max_length=10)
     name = models.CharField(max_length=100)
@@ -52,7 +36,7 @@ class Product(models.Model):
     price = models.IntegerField()
     stock = models.IntegerField()
     imageUrl = models.URLField()
-    created_by = models.ForeignKey('auth.User', related_name='products', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='products', on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
     date_created = models.DateField(auto_now_add=True)
 
@@ -64,7 +48,7 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    cart_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    cart_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # books = models.ManyToManyField(Book)
     products = models.ManyToManyField(Product)
@@ -75,4 +59,26 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.cart_id}'
+    
+#######################################################################
+# django-admin User Model Customize
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(_('username'),max_length=50,null=True,unique=True)
+    first_name = models.CharField(max_length=50,null=True)
+    last_name = models.CharField(max_length=50,null=True)
+    email = models.EmailField(_('email address'), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+   
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['username']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email   
 

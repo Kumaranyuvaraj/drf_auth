@@ -1,10 +1,11 @@
 from django.urls import path
-from authent.views import RegisterView, ChangePasswordView, UpdateProfileView, LogoutView, LogoutAllView,GetView,GetListView
+# from authent.views import RegisterView, ChangePasswordView, UpdateProfileView, LogoutView, LogoutAllView,GetView,GetListView
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from . import views
 
-from .views import (ListCategory, DetailCategory,ListSubCategory,DetailSubCategory, 
-                    ListProduct, DetailProduct, ListUser, 
+from users.views import (RegisterView, ChangePasswordView, UpdateProfileView, 
+                    LogoutView, LogoutAllView,GetView,GetListView,ListCategory ,DetailCategory,
+                    ListSubCategory,DetailSubCategory, ListProduct, DetailProduct, ListUser, 
                     DetailUser, ListCart, DetailCart)
 
 
