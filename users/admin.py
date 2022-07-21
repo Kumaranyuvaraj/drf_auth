@@ -1,6 +1,7 @@
 from django.contrib import admin
 from users.models import Category, Product, Cart, SubCategory,User
 
+
 from django.contrib.auth.admin import UserAdmin
 
 
@@ -23,11 +24,42 @@ class UserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+    
 
+class ProductAdmin(admin.ModelAdmin):
+    model = Product
+    list_display =  ('product_tag','name','category','sub_category',
+                     'price','stock','imageUrl','created_by','status',
+                     'date_created')
+    
+    list_filter = ('product_tag','name')
+    search_fields = ('product_tag','name')
+    
 
-admin.site.register(Category)
-admin.site.register(SubCategory)
-# admin.site.register(Book)
-admin.site.register(Product)
-admin.site.register(Cart)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    list_filter = ('title',)
+    search_fields = ('title',)
+    
+class SubCategoriesAdmin(admin.ModelAdmin):
+    model = SubCategory
+    list_display = ('productType','category')
+    list_filter = ('productType',)
+    search_fields = ('productType',)
+
+class CartAdmin(admin.ModelAdmin):
+
+    model = Cart
+    list_display = ('cart_id','created_at','getProducts')
+    list_filter = ('cart_id','created_at')
+    search_fields = ['cart_id']
+    
+    def getProducts(self,obj):
+        return "\n".join([p.product_tag for p in obj.products.all()])
+    
+    
+admin.site.register(Category,CategoryAdmin)
+admin.site.register(SubCategory,SubCategoriesAdmin)
+admin.site.register(Product,ProductAdmin)
+admin.site.register(Cart,CartAdmin)
 admin.site.register(User,UserAdmin)

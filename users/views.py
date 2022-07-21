@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework.views import APIView
 from django.http import HttpResponse
+from django.db.models import Q
 # from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import get_user_model
