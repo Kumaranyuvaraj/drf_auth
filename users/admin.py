@@ -34,18 +34,38 @@ class ProductAdmin(admin.ModelAdmin):
     
     list_filter = ('product_tag','name')
     search_fields = ('product_tag','name')
+    fieldsets = (
+        (None, {
+            "fields": ('name','category','sub_category','status'),
+            }
+         ),
+        )
+    
+    
     
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title',)
     list_filter = ('title',)
     search_fields = ('title',)
+    fieldsets = (
+        (None, {
+            "fields": ('title',),
+        }),
+    )
+    
     
 class SubCategoriesAdmin(admin.ModelAdmin):
     model = SubCategory
     list_display = ('productType','category')
     list_filter = ('productType',)
     search_fields = ('productType',)
+    fieldsets = (
+        (None, {
+            "fields": ('category',),
+        }),
+    )
+    
 
 class CartAdmin(admin.ModelAdmin):
 
@@ -56,6 +76,13 @@ class CartAdmin(admin.ModelAdmin):
     
     def getProducts(self,obj):
         return "\n".join([p.product_tag for p in obj.products.all()])
+    
+    fieldsets = (
+        (None, {
+            "fields": ('products',),
+        }),
+    )
+    
     
     
 admin.site.register(Category,CategoryAdmin)

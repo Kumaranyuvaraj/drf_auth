@@ -148,17 +148,6 @@ class DetailSubCategory(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
 
-# class ListBook(generics.ListCreateAPIView):
-#     # permission_classes = (permissions.IsAuthenticated,)
-#     queryset = Book.objects.all()
-#     serializer_class = BookSerializer
-
-# class DetailBook(generics.RetrieveUpdateDestroyAPIView):
-#     # permission_classes = (permissions.IsAuthenticated,)
-#     queryset = Book.objects.all()
-#     serializer_class = BookSerializer
-
-
 class ListProduct(generics.ListCreateAPIView):    
     # permission_classes = (permissions.IsAuthenticated,)
     queryset = Product.objects.all()
